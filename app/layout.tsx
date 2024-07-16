@@ -1,8 +1,60 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import localFont from "next/font/local";
+import { Toaster } from "react-hot-toast";
 import "./globals.css";
+import { ThemeProvider } from "@/providers/theme-provider";
+import { cn } from "@/lib/utils";
 
-const inter = Inter({ subsets: ["latin"] });
+const iransansFont = localFont({
+  src: [
+    {
+      path: "../public/fonts/IRANSansXThin.ttf",
+      weight: "100",
+      style: "normal"
+    },
+    {
+      path: "../public/fonts/IRANSansXUltraLight.ttf",
+      weight: "200",
+      style: "normal"
+    },
+    {
+      path: "../public/fonts/IRANSansXLight.ttf",
+      weight: "300",
+      style: "normal"
+    },
+    {
+      path: "../public/fonts/IRANSansXRegular.ttf",
+      weight: "400",
+      style: "normal"
+    },
+    {
+      path: "../public/fonts/IRANSansXMedium.ttf",
+      weight: "500",
+      style: "normal"
+    },
+    {
+      path: "../public/fonts/IRANSansXDemiBold.ttf",
+      weight: "600",
+      style: "normal"
+    },
+    {
+      path: "../public/fonts/IRANSansXBold.ttf",
+      weight: "700",
+      style: "normal"
+    },
+    {
+      path: "../public/fonts/IRANSansXExtraBold.ttf",
+      weight: "800",
+      style: "normal"
+    },
+    {
+      path: "../public/fonts/IRANSansXBlack.ttf",
+      weight: "900",
+      style: "normal"
+    },
+  ],
+  variable: '--font-iransans'
+})
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -15,8 +67,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <html lang="fa-IR" dir="rtl">
+      <body className={cn('min-h-screen bg-dark-300 font-sans antialiased', iransansFont.variable)}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+        >
+          {children}
+        </ThemeProvider>
+        <Toaster position="bottom-center" />
+      </body>
     </html>
   );
 }
