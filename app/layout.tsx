@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { Toaster } from "react-hot-toast";
-import "./globals.css";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { cn } from "@/lib/utils";
+import "./globals.css";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 const iransansFont = localFont({
   src: [
@@ -73,9 +74,19 @@ export default function RootLayout({
           attribute="class"
           defaultTheme="dark"
         >
-          {children}
+          <TooltipProvider delayDuration={0}>
+            {children}
+          </TooltipProvider>
         </ThemeProvider>
-        <Toaster position="bottom-center" />
+        <Toaster
+          position="bottom-center"
+          toastOptions={{
+            style: {
+              background: "#1A1D21",
+              color: "white"
+            }
+          }}
+        />
       </body>
     </html>
   );

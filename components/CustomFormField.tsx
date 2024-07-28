@@ -21,7 +21,7 @@ import { Select, SelectContent, SelectTrigger, SelectValue } from "./ui/select"
 import { Textarea } from "./ui/textarea"
 import { Checkbox } from "./ui/checkbox"
 
-enum FormFieldType {
+export enum FormFieldType {
     INPUT = 'input',
     CHECKBOX = "checkbox",
     TEXTAREA = "textarea",
@@ -61,7 +61,7 @@ const RenderField = ({ field, props }: { field: any, props: CustomProps }) => {
                             height={24}
                             width={24}
                             alt={iconAlt || 'icon'}
-                            className="ml-2"
+                            className="ms-2"
                         />
                     )}
                     <FormControl>
@@ -69,6 +69,7 @@ const RenderField = ({ field, props }: { field: any, props: CustomProps }) => {
                             placeholder={placeholder}
                             {...field}
                             className="shad-input border-0"
+                            disabled={props.disabled}
                         />
                     </FormControl>
                 </div>
@@ -105,7 +106,7 @@ const RenderField = ({ field, props }: { field: any, props: CustomProps }) => {
                         height={24}
                         width={24}
                         alt="calendar"
-                        className="ml-2"
+                        className="ms-2"
                     />
                     <FormControl>
                         <DatePicker
@@ -116,6 +117,7 @@ const RenderField = ({ field, props }: { field: any, props: CustomProps }) => {
                             timeInputLabel="Time:"
                             wrapperClassName="date-picker"
                             locale="fa"
+                            disabled={props.disabled}
                         />
                     </FormControl>
                 </div>
@@ -123,7 +125,7 @@ const RenderField = ({ field, props }: { field: any, props: CustomProps }) => {
         case FormFieldType.SELECT:
             return (
                 <FormControl>
-                    <Select onValueChange={field.onChange} value={field.value}>
+                    <Select disabled={props.disabled} onValueChange={field.onChange} value={field.value}>
                         <FormControl>
                             <SelectTrigger className="shad-select-trigger">
                                 <SelectValue placeholder={placeholder} />
@@ -163,9 +165,9 @@ const CustomFormField = (props: CustomProps) => {
             control={control}
             name={name}
             render={({ field }) => (
-                <FormItem className="flex-1">
+                <FormItem className="flex-1 mb-4">
                     {fieldType !== FormFieldType.CHECKBOX && label && (
-                        <FormLabel>{label}</FormLabel>
+                        <FormLabel className="!text-white">{label}</FormLabel>
                     )}
 
                     <RenderField field={field} props={props} />

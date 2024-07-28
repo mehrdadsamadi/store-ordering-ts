@@ -25,7 +25,7 @@ const FileUploader = ({ files, onChange }: FileUploaderProps) => {
                     width={1000}
                     height={1000}
                     alt='uploaded image'
-                    className='max-h-[400px] overflow-hidden object-cover'
+                    className='max-h-[250px] overflow-hidden object-cover rounded-sm'
                 />
             ) : (
                 <>
@@ -36,7 +36,7 @@ const FileUploader = ({ files, onChange }: FileUploaderProps) => {
                         alt='upload icon'
                     />
                     <div className='file-upload_label'>
-                        <p className='text-14-regular'>
+                        <p className='text-14-regular flex flex-col'>
                             <span className='text-green-500'>
                                 برای آپلود کلیک کنید
                             </span>
