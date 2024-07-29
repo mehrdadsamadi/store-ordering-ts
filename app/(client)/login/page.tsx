@@ -15,6 +15,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { checkOtp, getOtp } from '@/actions/auth.actions';
 import { ROLES } from '@/constants';
+import { getCookie } from '@/actions/cookies.actions';
 
 const LoginPage = () => {
   const { push } = useRouter()
@@ -40,9 +41,24 @@ const LoginPage = () => {
       buttonText: "ثبت و ادامه"
     },
   ])
-  const [step, setStep] = useState(3)
+  const [step, setStep] = useState(1)
   const [phone, setPhone] = useState('')
   const [code, setCode] = useState('')
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const user = await getCookie("user")
+        if(user) {
+          push("/")
+        }
+      } catch (error) {
+        console.log("failed to fetch user", error);
+      }
+    }
+
+    fetchUser()
+  }, [])
 
   useEffect(() => {
     if (step === 2) {

@@ -1,4 +1,6 @@
+import { logout } from "@/actions/auth.actions";
 import { type ClassValue, clsx } from "clsx"
+import toast from "react-hot-toast";
 import { twMerge } from "tailwind-merge"
 
 export function cn(...inputs: ClassValue[]) {
@@ -40,4 +42,16 @@ export async function sendSms(data: object) {
       body: JSON.stringify(data),
       headers: { 'Content-Type': 'application/json' }
   })
+}
+
+export async function handleLogout() {
+  await toast.promise(
+      logout(),
+      {
+          loading: 'در حال خروج از حساب کاربری',
+          success: ({ message }) => message!,
+          error: ({ error }) => error!,
+      }
+  )
+  .then(() => window.location.href = "/login")
 }

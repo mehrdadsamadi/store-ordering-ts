@@ -7,11 +7,11 @@ import { IStoreInfo } from "@/types/store/store.types";
 import Store from "@/models/store.model";
 
 export const handleStoreInfo = async ({values, edit = false}: {values: IStoreInfo, edit?: boolean}) => {
-    const user = await getCookie("user")
-    if(!user)
-        return parseStringify({ error: 'ابتدا در حساب کاربری خود لاگین کنید' });
-
     try {
+        const user = await getCookie("user")
+        if(!user)
+            return parseStringify({ error: 'ابتدا در حساب کاربری خود لاگین کنید' });
+
         await connectMongo()
 
         if(!edit) {

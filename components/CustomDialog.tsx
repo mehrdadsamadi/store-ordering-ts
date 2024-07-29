@@ -18,7 +18,7 @@ interface DialogProps {
     children: React.ReactNode,
     onSubmit: () => void,
     onClose: () => void,
-    triggerBtnText?: string,
+    triggerBtnText?: string | React.ReactNode,
     description?: string,
     submitBtnText?: string,
     rejectBtnText?: string,

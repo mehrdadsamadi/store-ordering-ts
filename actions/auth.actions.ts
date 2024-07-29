@@ -5,7 +5,35 @@ import connectMongo from "@/lib/connectMongo";
 import { getRandomFourDigit, parseStringify, sendSms } from "@/lib/utils";
 import Session from "@/models/session.model";
 import User from "@/models/user.model";
-import { setCookie } from "./cookies.actions";
+import { getCookie, setCookie } from "./cookies.actions";
+import { cookies } from "next/headers";
+
+export const logout = async () => {
+    try {
+        const user = await getCookie("user")
+
+        await connectMongo()
+
+        const doc = await Session.deleteOne({ phone: user.phone })
+
+        cookies().delete("user")
+
+        if (doc.deletedCount) {
+            return parseStringify({ message: "خروج از حساب کاربری با موفقیت انجام شد" })
+        } else {
+            throw new Error("خروج نا موفق بود ، بار دیگر امتحان کنید")
+        }
+
+    } catch (error: unknown) {
+        console.log(error);
+
+        if (error instanceof Error) {
+            return parseStringify({ error: error.message });
+        } else {
+            return parseStringify({ error: 'خطایی رخ داده است، بار دیگر امتحان کنید.' });
+        }
+    }
+}
 
 export const getOtp = async ({ phone, resend }: { phone: string, resend: boolean }) => {
     try {

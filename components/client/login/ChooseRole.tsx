@@ -23,7 +23,7 @@ const ChooseRole = ({ setLoading, phone }: ChooseRoleProps) => {
     const { push } = useRouter()
 
     const [role, setRole] = useState('')
-    const [step, setStep] = useState(3)
+    const [step, setStep] = useState(1)
 
     const form = useForm<z.infer<typeof ChooseRoleFormValidation>>({
         resolver: zodResolver(ChooseRoleFormValidation),

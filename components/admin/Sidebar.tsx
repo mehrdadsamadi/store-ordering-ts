@@ -20,8 +20,10 @@ import {
     LogOut
 } from "lucide-react"
 import { usePathname } from 'next/navigation'
-import { cn } from '@/lib/utils'
+import { cn, handleLogout } from '@/lib/utils'
 import { Separator } from '../ui/separator'
+import ConfirmButtton from '../ConfirmButtton'
+import CustomDialog from '../CustomDialog'
 
 const Sidebar = () => {
     const path = usePathname()
@@ -144,18 +146,12 @@ const Sidebar = () => {
                 </Tooltip>
             </nav>
             <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
-                <Tooltip>
-                    <TooltipTrigger asChild>
-                        <Link
-                            href="/logout"
-                            className={cn('flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8', path.includes('logoutt') && 'bg-accent text-accent-foreground')}
-                        >
-                            <LogOut color='red' className="h-5 w-5" />
-                            <span className="sr-only">خروج</span>
-                        </Link>
-                    </TooltipTrigger>
-                    <TooltipContent side="right">خروج</TooltipContent>
-                </Tooltip>
+                <ConfirmButtton
+                    triggerBtnText={<LogOut color='red' className="h-5 w-5" />}
+                    title='خروج'
+                    description='برای خروج مطمعن هستید؟'
+                    onSubmit={handleLogout}
+                />
             </nav>
         </aside>
     )

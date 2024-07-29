@@ -19,6 +19,18 @@ export const setCookie = (data: { [key: string]: any }) => {
     cookies().set('user', JSON.stringify(cookieObject), { expires: new Date(Date.now() + oneWeek) });
 }
 
+// export const getCookie = (cookieName: string) => {
+//     return JSON.parse(cookies().get(cookieName)?.value || "")
+// }
 export const getCookie = (cookieName: string) => {
-    return JSON.parse(cookies().get(cookieName)?.value || "")
-}
+    const cookieValue = cookies().get(cookieName)?.value;
+    if (!cookieValue) {
+        return null; // یا هر مقدار پیش‌فرض دیگری که مناسب است
+    }
+    try {
+        return JSON.parse(cookieValue);
+    } catch (error) {
+        console.error('Failed to parse cookie:', error);
+        return null; // یا هر مقدار پیش‌فرض دیگری که مناسب است
+    }
+};

@@ -66,8 +66,9 @@ const StoreInfo = ({ setLoading, editingAddress = false, storeInfo }: StoreInfoP
   const submitStoreInfo = async (values: z.infer<typeof StoreInfoFormValidation>) => {
     setLoading(true)
 
-    await getCookie("user")
-      .then(async (user: IUserCookie) => {
+    try {
+      const user = await getCookie("user")
+      if (user) {
         await toast.promise(
           handleStoreInfo({ values: { ...values, phone: user.phone, location: { lat: storeLoc[0], lng: storeLoc[1] } }, edit: editingAddress }),
           {
@@ -81,8 +82,12 @@ const StoreInfo = ({ setLoading, editingAddress = false, storeInfo }: StoreInfoP
               return push("/")
             }
           })
-          .finally(() => setLoading(false))
-      })
+      }
+    } catch (error) {
+      console.log("fialed to fetch user", error);
+    }
+    
+    setLoading(false)
   }
 
   return (
