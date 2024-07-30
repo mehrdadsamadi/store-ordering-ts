@@ -14,15 +14,15 @@ const cached: Cached = {
 
 // import all models
 import "@/models/category.model"
-// import "@/models/brand.model"
+import "@/models/brand.model"
 // import "@/models/feature.model"
 // import "@/models/specification.model"
 // import "@/models/product.model"
-// import "@/models/store.model"
+import "@/models/store.model"
 import "@/models/user.model"
 // import "@/models/order.model"
 // import "@/models/bid.model"
-// import "@/models/session.model"
+import "@/models/session.model"
 
 async function connectMongo(): Promise<typeof mongoose> {
     if (!MONGO_URI) {

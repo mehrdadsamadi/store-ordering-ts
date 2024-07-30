@@ -19,9 +19,6 @@ export const setCookie = (data: { [key: string]: any }) => {
     cookies().set('user', JSON.stringify(cookieObject), { expires: new Date(Date.now() + oneWeek) });
 }
 
-// export const getCookie = (cookieName: string) => {
-//     return JSON.parse(cookies().get(cookieName)?.value || "")
-// }
 export const getCookie = (cookieName: string) => {
     const cookieValue = cookies().get(cookieName)?.value;
     if (!cookieValue) {

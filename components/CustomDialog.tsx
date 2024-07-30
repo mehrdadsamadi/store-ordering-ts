@@ -1,5 +1,5 @@
 "use client"
-// TODO: اگر یکی از ایمپوت ها خطا داشته باشد نباید دیالوگ در حالت سابمیت بسنه شود
+
 import {
     Dialog,
     DialogContent,
@@ -12,6 +12,7 @@ import {
 
 import React, { useEffect, useState } from 'react'
 import { Button } from "./ui/button"
+import { useFormContext } from "react-hook-form"
 
 interface DialogProps {
     title: string,
@@ -27,16 +28,14 @@ interface DialogProps {
 }
 
 const CustomDialog = (props: DialogProps) => {
-    const { title, children, onSubmit, onClose, triggerBtnText, submitBtnText, description, rejectBtnText, requiredFieldsName, showBtns = true } = props
+    const { watch } = useFormContext()
     const [open, setOpen] = useState(false)
-    const [disable, setDisable] = useState(false)
+    const { title, children, onSubmit, onClose, triggerBtnText, submitBtnText, description, rejectBtnText, requiredFieldsName, showBtns = true } = props
 
-    useEffect(() => {
-        if (requiredFieldsName && requiredFieldsName?.length) {
-            setDisable(!requiredFieldsName.every(field => field?.length > 0))
-        }
-    }, [requiredFieldsName])
-
+    const hasDisable = (): boolean => {
+        return requiredFieldsName ? requiredFieldsName.some(fn => !watch(fn)) : false;
+    }
+    
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
@@ -57,7 +56,7 @@ const CustomDialog = (props: DialogProps) => {
                     showBtns && (
                         <DialogFooter className="flex items-center !justify-start gap-2 mt-2">
                             <Button
-                                disabled={requiredFieldsName && disable}
+                                disabled={hasDisable()}
                                 onClick={() => {
                                     onSubmit();
                                     setOpen(false);
@@ -68,7 +67,7 @@ const CustomDialog = (props: DialogProps) => {
                             <Button
                                 variant="ghost"
                                 onClick={() => {
-                                    onClose()
+                                    onClose();
                                     setOpen(false);
                                 }}
                             >

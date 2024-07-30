@@ -19,7 +19,7 @@ interface ConfirmButtonProps {
     onSubmit: () => void;
 }
 
-const ConfirmButtton = (props: ConfirmButtonProps) => {
+const ConfirmButton = (props: ConfirmButtonProps) => {
     const { title, triggerBtnText, submitBtnText, description, rejectBtnText, onSubmit } = props
     const [open, setOpen] = useState(false)
 
@@ -60,4 +60,4 @@ const ConfirmButtton = (props: ConfirmButtonProps) => {
     )
 }
 
-export default ConfirmButtton
+export default ConfirmButton

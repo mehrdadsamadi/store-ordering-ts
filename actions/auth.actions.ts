@@ -14,7 +14,7 @@ export const logout = async () => {
 
         await connectMongo()
 
-        const doc = await Session.deleteOne({ phone: user.phone })
+        const doc = await Session.deleteOne({ phone: user?.phone })
 
         cookies().delete("user")
 

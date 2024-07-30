@@ -2,17 +2,17 @@
 
 import connectMongo from "@/lib/connectMongo";
 import { parseStringify } from "@/lib/utils";
-import Category from "@/models/category.model";
 import { uploadFile } from "./upload.actions";
-import { IAddCategoryParams } from "@/types/category/category.types";
 import { getCookie } from "./cookies.actions";
 import { ROLES } from "@/constants";
+import Brand from "@/models/brand.model";
+import { IAddBrandParams } from "@/types/brand/brand.types";
 
-export const getCategories = async () => {
+export const getBrands = async () => {
     try {
         await connectMongo()
 
-        return parseStringify(await Category.find())
+        return parseStringify(await Brand.find())
     } catch (error: unknown) {
         console.log(error);
 
@@ -24,23 +24,7 @@ export const getCategories = async () => {
     }
 }
 
-export const getChildCategories = async (parentId: string) => {
-    try {
-        await connectMongo()
-
-        return parseStringify(await Category.find({parent: parentId}))
-    } catch (error: unknown) {
-        console.log(error);
-
-        if (error instanceof Error) {
-            return parseStringify({ error: error.message });
-        } else {
-            return parseStringify({ error: 'خطایی رخ داده است، بار دیگر امتحان کنید.' });
-        }
-    }
-}
-
-export const addCategory = async (values: IAddCategoryParams) => {
+export const addBrand = async (values: IAddBrandParams) => {
     try {
         const user = await getCookie("user")
         if(user?.role !== ROLES.ADMIN.name)
@@ -49,14 +33,36 @@ export const addCategory = async (values: IAddCategoryParams) => {
         await connectMongo()
 
         if(values.image) {
-            values.image = await uploadFile(values.image, "categories")
+            values.image = await uploadFile(values.image, "brands")
         }
-        
-        if(values.parent === "") delete values.parent
 
-        await Category.create(values)
+        await Brand.create(values)
         
-        return parseStringify({message: "دسته بندی با موفقیت ایجاد شد"})
+        return parseStringify({message: "برند با موفقیت ایجاد شد"})
+    } catch (error) {
+        console.log(error);
+
+        if (error instanceof Error) {
+            return parseStringify({ error: error.message });
+        } else {
+            return parseStringify({ error: 'خطایی رخ داده است، بار دیگر امتحان کنید.' });
+        }
+    }
+}
+
+export const deleteBrand = async (brandId: string) => {
+    try {
+        const user = await getCookie("user")
+        if(user?.role !== ROLES.ADMIN.name)
+            return parseStringify({ error: "شما دسترسی به این بخش را ندارید" });
+
+        
+        await connectMongo()
+
+        await Brand.findByIdAndDelete(brandId)
+        
+        return parseStringify({message: "برند با موفقیت حذف شد"})
+        
     } catch (error) {
         console.log(error);
 

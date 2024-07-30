@@ -3,12 +3,11 @@
 import CustomDialog from "@/components/CustomDialog"
 import CustomFormField, { FormFieldType } from "@/components/CustomFormField"
 import FileUploader from "@/components/FileUploader"
-import Loading from "@/components/Loading"
-import { Form, FormControl } from "@/components/ui/form"
+import { FormControl } from "@/components/ui/form"
 import { CategoryFormValidation } from "@/validations"
 import React, { useCallback, useEffect, useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
+import { FormProvider, useForm } from "react-hook-form"
 import { z } from "zod"
 import { CategoryDefaultValues } from "@/constants"
 import toast from "react-hot-toast"
@@ -129,14 +128,14 @@ const CategoriesPage = () => {
 
   return (
     <section className="flex flex-col gap-2 h-full">
-      {/* <Loading loading={loading} /> */}
       <div className="rounded-lg border bg-card text-card-foreground shadow-sm p-4 flex justify-between">
-        <CustomDialog
-          title="ایجاد دسته بندی"
-          onSubmit={form.handleSubmit(handleCreateCategory)}
-          onClose={handleCloseDialog}
-        >
-          <Form {...form}>
+        <FormProvider {...form}>
+          <CustomDialog
+            title="ایجاد دسته بندی"
+            requiredFieldsName={["name"]}
+            onSubmit={form.handleSubmit(handleCreateCategory)}
+            onClose={handleCloseDialog}
+          >
             <CustomFormField
               fieldType={FormFieldType.SKELETON}
               control={form.control}
@@ -169,8 +168,8 @@ const CategoriesPage = () => {
               iconSrc="/assets/icons/userRoundPen.svg"
               iconAlt="category"
             />
-          </Form>
-        </CustomDialog>
+          </CustomDialog>
+        </FormProvider>
 
         <div>
           <Input
@@ -220,7 +219,7 @@ const CategoriesPage = () => {
                 categories.map((category: ICategoryType) => (
                   <div key={category._id} onClick={() => handleCategoryClick(category._id)} className="flex items-center gap-4 px-4 py-2 border rounded-md cursor-pointer">
                     <div className="flex items-center gap-2">
-                      <Image src={category?.image || "/assets/placeholders/img-placeholder.webp"} alt="category image" className="rounded-full w-10 h-10" width={1000} height={1000} />
+                      <Image src={category?.image || "/assets/placeholders/img-placeholder.webp"} alt="category image" className="rounded-full size-10" width={1000} height={1000} />
                       <h3>{category.name}</h3>
                     </div>
                     <ChevronLeft />

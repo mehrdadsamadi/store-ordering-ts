@@ -8,6 +8,13 @@ export const CategoryFormValidation = z.object({
     parent: z.string().optional()
 });
 
+export const BrandFormValidation = z.object({
+    name: z.string().refine((val) => val.trim() !== '', {
+        message: 'نام برند را وارد کنید',
+    }),
+    image: z.custom<File[]>().optional(),
+});
+
 export const ChooseRoleFormValidation = z.object({
     firstname: z.string().refine((val) => val.trim() !== '', {
         message: 'نام خود را وارد کنید',
@@ -31,8 +38,4 @@ export const StoreInfoFormValidation = z.object({
     address: z.string().refine((val) => val.trim() !== '', {
         message: 'آدرس فروشگاه را وارد کنید',
     }),
-    // location: z.object({
-    //     lat: z.number().min(-90, { message: 'عرض جغرافیایی باید بین -90 و 90 باشد' }).max(90, { message: 'عرض جغرافیایی باید بین -90 و 90 باشد' }),
-    //     lng: z.number().min(-180, { message: 'طول جغرافیایی باید بین -180 و 180 باشد' }).max(180, { message: 'طول جغرافیایی باید بین -180 و 180 باشد' })
-    // })
 });

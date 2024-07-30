@@ -1,11 +1,14 @@
+import { getCookie } from "@/actions/cookies.actions";
 import Sidebar from "@/components/admin/Sidebar"
+import { ROLES } from "@/constants";
+import { redirect } from "next/navigation";
 import React from "react"
 
-const AdminLayout = ({ children }: { children: React.ReactNode }) => {
-    // const { user } = useGetServerSession()
-    // if (user?.role !== ROLES.ADMIN.name) {
-    //     return redirect("/")
-    // }
+const AdminLayout = async ({ children }: { children: React.ReactNode }) => {
+    const user = await getCookie("user")
+        if(user?.role !== ROLES.ADMIN.name)
+            return redirect("/");
+
     return (
         <section className="h-screen">
             <Sidebar />

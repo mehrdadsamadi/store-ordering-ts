@@ -22,8 +22,7 @@ import {
 import { usePathname } from 'next/navigation'
 import { cn, handleLogout } from '@/lib/utils'
 import { Separator } from '../ui/separator'
-import ConfirmButtton from '../ConfirmButtton'
-import CustomDialog from '../CustomDialog'
+import ConfirmButton from '../ConfirmButton'
 
 const Sidebar = () => {
     const path = usePathname()
@@ -146,7 +145,7 @@ const Sidebar = () => {
                 </Tooltip>
             </nav>
             <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
-                <ConfirmButtton
+                <ConfirmButton
                     triggerBtnText={<LogOut color='red' className="h-5 w-5" />}
                     title='خروج'
                     description='برای خروج مطمعن هستید؟'

@@ -23,6 +23,11 @@ export const CategoryDefaultValues = {
     parent: ""
 }
 
+export const BrandDefaultValues = {
+    name: "",
+    image: [],
+}
+
 export const ChooseRoleDefaultValues = {
     avatar: [],
     firstname: "",
@@ -34,8 +39,4 @@ export const StoreInfoDefaultValues = {
     province: "",
     city: "",
     address: "",
-    // location: {
-    //     lat: 35.715298,
-    //     lng: 51.404343
-    // }
 }
