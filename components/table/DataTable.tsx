@@ -90,11 +90,12 @@ export function DataTable<TData, TValue>({
           disabled={!table.getCanPreviousPage()}
           className="shad-gray-btn"
         >
-          <Image 
+          <Image
             src="/assets/icons/arrow.svg"
             width={24}
             height={24}
             alt="arrow"
+            className="rotate-180"
           />
         </Button>
         <Button
@@ -104,12 +105,11 @@ export function DataTable<TData, TValue>({
           disabled={!table.getCanNextPage()}
           className="shad-gray-btn"
         >
-          <Image 
+          <Image
             src="/assets/icons/arrow.svg"
             width={24}
             height={24}
             alt="arrow"
-            className="rotate-180"
           />
         </Button>
       </div>
