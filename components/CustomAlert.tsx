@@ -8,7 +8,7 @@ const CustomAlert = ({ title, text }: { title: string, text: string }) => {
                 <CircleAlert className="size-5 right-0" />
             </div>
             <div className="">
-                <AlertTitle>{title}</AlertTitle>
+                <AlertTitle className="text-start">{title}</AlertTitle>
                 <AlertDescription>{text}</AlertDescription>
             </div>
         </Alert>

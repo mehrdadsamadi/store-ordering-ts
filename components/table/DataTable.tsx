@@ -23,6 +23,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react"
 import { Separator } from "../ui/separator"
 import { Input } from "../ui/input"
+import CustomAlert from "../CustomAlert"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -95,7 +96,7 @@ export function DataTable<TData, TValue>({
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24 text-center">
-                  No results.
+                  <CustomAlert title="اخطار!" text="داده ای برای نمایش وجود ندارد" />
                 </TableCell>
               </TableRow>
             )}
