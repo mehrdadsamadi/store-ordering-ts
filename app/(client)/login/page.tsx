@@ -81,7 +81,7 @@ const LoginPage = () => {
     await toast.promise(
       getOtp({ phone, resend }),
       {
-        loading: 'در حال ایجاد دسته بندی ...',
+        loading: 'در حال ارسال کد ...',
         success: ({ message }) => message!,
         error: ({ error }) => error!,
       }

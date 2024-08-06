@@ -17,7 +17,7 @@ export const usersColumn: ColumnDef<IUserModel>[] = [
         cell: ({ row: { original } }) => {
             return (
                 <div className="flex items-center gap-2">
-                    <Image width={1000} height={1000} className="size-10 rounded-full" src={original.avatar || '/placeholders/user-placeholder.jpg'} alt="user image" />
+                    <Image width={1000} height={1000} className="size-10 rounded-full" src={original.avatar || '/assets/placeholders/user-placeholder.jpg'} alt="user image" />
                     <div className="text-base">{original.firstname + " " + original.lastname}</div>
                 </div>
             );

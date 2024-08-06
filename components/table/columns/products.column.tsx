@@ -16,7 +16,7 @@ export const productsColumn: ColumnDef<IProductModel>[] = [
         cell: ({ row: { original } }) => {
             return (
                 <div className="flex items-center gap-2">
-                    <Image width={1000} height={1000} className="size-10 rounded-full" src={original.images[0] || '/placeholders/user-placeholder.jpg'} alt="Jese image" />
+                    <Image width={1000} height={1000} className="size-10 rounded-full" src={original.images[0] || '/assets/placeholders/user-placeholder.jpg'} alt="Jese image" />
                     <div className="text-base">{original.name}</div>
                 </div>
             );

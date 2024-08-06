@@ -15,7 +15,7 @@ const cached: Cached = {
 // import all models
 import "@/models/category.model"
 import "@/models/brand.model"
-// import "@/models/feature.model"
+import "@/models/feature.model"
 import "@/models/specification.model"
 import "@/models/product.model"
 import "@/models/store.model"

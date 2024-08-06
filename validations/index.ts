@@ -39,3 +39,23 @@ export const StoreInfoFormValidation = z.object({
         message: 'آدرس فروشگاه را وارد کنید',
     }),
 });
+
+export const ProductFormValidation = z.object({
+    name: z.string().refine((val) => val.trim() !== '', {
+        message: 'نام محصول را وارد کنید',
+    }),
+    images: z.custom<File[]>().optional(),
+    brand: z.string().refine((val) => val.trim() !== '', {
+        message: 'برند محصول را وارد کنید',
+    }),
+    category: z.string().refine((val) => val.trim() !== '', {
+        message: 'دسته بندی محصول را وارد کنید',
+    }),
+    slug: z.string().refine((val) => val.trim() !== '', {
+        message: 'اسلاگ محصول را وارد کنید',
+    }),
+    description: z.string().refine((val) => val.trim() !== '', {
+        message: 'توضیحات محصول را وارد کنید',
+    }),
+    visible: z.boolean(),
+});

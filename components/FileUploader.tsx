@@ -42,7 +42,7 @@ const FileUploader = ({ files, onChange }: FileUploaderProps) => {
                             </span>
                             <span className='mx-1'>یا</span>
                             <span className='text-green-500'>
-                                تصویر خود را اینجاد رها کنید
+                                تصویر را اینجا رها کنید
                             </span>
                         </p>
                         <p>

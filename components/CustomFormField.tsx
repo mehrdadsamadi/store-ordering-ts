@@ -20,6 +20,7 @@ import { E164Number } from "libphonenumber-js/core"
 import { Select, SelectContent, SelectTrigger, SelectValue } from "./ui/select"
 import { Textarea } from "./ui/textarea"
 import { Checkbox } from "./ui/checkbox"
+import { cn } from "@/lib/utils"
 
 export enum FormFieldType {
     INPUT = 'input',
@@ -37,6 +38,7 @@ interface CustomProps {
     control: Control<any>,
     fieldType: FormFieldType,
     name: string,
+    className?: string,
     label?: string,
     placeholder?: string,
     iconSrc?: string,
@@ -158,14 +160,14 @@ const RenderField = ({ field, props }: { field: any, props: CustomProps }) => {
 }
 
 const CustomFormField = (props: CustomProps) => {
-    const { control, fieldType, name, label } = props
+    const { control, fieldType, name, label, className } = props
 
     return (
         <FormField
             control={control}
             name={name}
             render={({ field }) => (
-                <FormItem className="flex-1 mb-4">
+                <FormItem className={cn('flex-1 mb-4', className)}>
                     {fieldType !== FormFieldType.CHECKBOX && label && (
                         <FormLabel className="!text-white">{label}</FormLabel>
                     )}
