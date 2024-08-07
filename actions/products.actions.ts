@@ -36,17 +36,23 @@ export const addProduct = async (values: IAddProductParams) => {
 
         await connectMongo()
 
-        if(values.images && values.images.length > 0) {
-            let images: FormData[] = []
-            values.images.map(async img => {
-                images.push(await uploadFile(img, "products"))
-            })
+        let images: string[] = []
+
+        if (values.images) {
+            const imgs = [...values.images]
+
+            for(const img of imgs) {
+                let fd = new FormData();
+                fd.append("file", img[1])
+                images.push(await uploadFile(fd, "products"))
+            }
+
             values.images = images
         }
 
         await Product.create(values)
 
-        return parseStringify({message: "محصول با موفقیت ایجاد شد"})
+        return parseStringify({ message: "محصول با موفقیت ایجاد شد" })
     } catch (error: unknown) {
         console.log(error);
 

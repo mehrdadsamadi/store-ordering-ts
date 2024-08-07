@@ -72,37 +72,32 @@ const CreateProductPage = ({ params: { productId } }: SearchParamProps) => {
     }
 
     const handleCreateProduct = async (values: z.infer<typeof ProductFormValidation>) => {
-        console.log("values", {...values, images});
+        setLoading(true)
 
-        // setLoading(true)
-        // let formData = new FormData();
-        // if (values.images && values.images.length > 0) {
-        //     images.map(img => {
-        //         if(img && img?.file) {
-        //             console.log(img.file[0]);
-                    
-        //             formData.append("file", img.file[0])
-        //         }
-        //     })
-        // }
-        // console.log("formData", formData);
+        let formData = new FormData();
+        if (values.images && values.images.length > 0) {
+            images.map(img => {
+                if (img && img?.file) {
+                    formData.append("file", img.file[0])
+                }
+            })
+        }
 
-        
-
-        // await toast.promise(
-        //     addProduct({ ...values }),
-        //     {
-        //         loading: 'در حال ایجاد محصول ...',
-        //         success: ({ message }) => message,
-        //         error: ({ error }) => error,
-        //     }
-        // )
-        //     .finally(() => resetStates())
-        //     .finally(() => setLoading(false))
+        await toast.promise(
+            addProduct({ ...values, images: formData }),
+            {
+                loading: 'در حال ایجاد محصول ...',
+                success: ({ message }) => message,
+                error: ({ error }) => error,
+            }
+        )
+            .finally(() => resetStates())
+            .finally(() => setLoading(false))
     }
 
     const resetStates = () => {
         form.reset(ProductDefaultValues)
+        setImages([{ id: Date.now() }])
     }
 
     const handleAddNewProductImage = () => {
@@ -211,7 +206,17 @@ const CreateProductPage = ({ params: { productId } }: SearchParamProps) => {
                                 />
                             </div>
                             <div>
-                                {/* <CustomEditor setData={setDescription} data={description} /> */}
+                                <CustomFormField
+                                    fieldType={FormFieldType.SKELETON}
+                                    control={form.control}
+                                    name="description"
+                                    label="توضیحات"
+                                    renderSkeleton={(field) => (
+                                        <FormControl>
+                                            <CustomEditor setData={field.onChange} data={field.value} />
+                                        </FormControl>
+                                    )}
+                                />
                             </div>
                         </div>
                         <Button type='submit' variant="outline" className='mt-4 w-full'>

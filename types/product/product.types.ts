@@ -19,9 +19,9 @@ export interface IProductType extends IProductModel {
 export interface IAddProductParams {
     name: string;
     description?: string;
-    images: FormData[] | undefined;
+    images?: FormData | undefined;
     slug: string;
     visible: boolean;
-    category: Schema.Types.ObjectId;
-    brand: Schema.Types.ObjectId;
+    category: string;
+    brand: string;
 }

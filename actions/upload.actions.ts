@@ -1,3 +1,4 @@
+// @ts-nocheck
 "use server"
 
 import { parseStringify } from "@/lib/utils"
@@ -9,13 +10,11 @@ export const uploadFile = async (data: FormData, folderName: string) => {
         if (data.get("file")) {
             const file = data.get("file")
             
-            // @ts-ignore
             const ext = file.name.split(".").slice(-1)[0]
             const newFileName = new Date().valueOf() + "." + ext
-            const uploadPath = path.join(__dirname, "..", "..", "..", "..", "..", "public", "assets", "images", folderName, newFileName)
+            const uploadPath = path.join("F:", "next", "store-ordering-ts", "public", "assets", "images", folderName, newFileName)
 
             const chunks = []
-            // @ts-ignore
             for await (const chunk of file.stream()) {
                 chunks.push(chunk)
             }
