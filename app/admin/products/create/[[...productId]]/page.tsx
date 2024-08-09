@@ -7,7 +7,7 @@ import CustomFormField, { FormFieldType } from '@/components/CustomFormField'
 import FileUploader from '@/components/FileUploader'
 import Loading from '@/components/Loading'
 import { Button } from '@/components/ui/button'
-import { Form, FormControl } from '@/components/ui/form'
+import { Form, FormControl, FormLabel } from '@/components/ui/form'
 import { SelectItem } from '@/components/ui/select'
 import { ProductDefaultValues } from '@/constants'
 import { ProductFormValidation } from '@/validations'
@@ -100,16 +100,15 @@ const CreateProductPage = ({ params: { productId } }: SearchParamProps) => {
         setImages([{ id: Date.now() }])
     }
 
-    const handleAddNewProductImage = () => {
-        setImages(prevImages => [...prevImages, { id: Date.now() }])
-    }
-
     const handleImageChange = (index: number, files: File[]) => {
         setImages(prevImages => {
             const newImages = [...prevImages]
             newImages[index].file = files
             return newImages
         })
+        if (images.length < 6) {
+            setImages(prevImages => [...prevImages, { id: Date.now() }])
+        }
     }
 
     return (
@@ -117,33 +116,31 @@ const CreateProductPage = ({ params: { productId } }: SearchParamProps) => {
             <div className="w-full p-4 rounded-lg h-full relative">
                 <Loading loading={loading} />
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(handleCreateProduct)}>
-                        <div className="p-4 bg-card rounded-lg overflow-x-auto grid grid-cols-6 gap-2 items-center">
-                            {images.map((img, index) => (
-                                <div key={img.id} className="">
-                                    <CustomFormField
-                                        fieldType={FormFieldType.SKELETON}
-                                        control={form.control}
-                                        name={`images[${index}]`}
-                                        className='mb-0'
-                                        renderSkeleton={(field) => (
-                                            <FormControl>
-                                                <FileUploader
-                                                    files={img.file}
-                                                    onChange={(file) => handleImageChange(index, file)}
-                                                />
-                                            </FormControl>
-                                        )}
-                                    />
-                                </div>
-                            ))}
-                            {images.length < 6 && (
-                                <div>
-                                    <Button variant="outline" onClick={handleAddNewProductImage}>تصویر جدید</Button>
-                                </div>
-                            )}
+                    <form className='grid grid-cols-2 gap-4' onSubmit={form.handleSubmit(handleCreateProduct)}>
+                        <div>
+                            <FormLabel>تصاویر محصول</FormLabel>
+                            <div className="grid grid-cols-3 gap-4 mt-2">
+                                {images.map((img, index) => (
+                                    <div key={img.id} className="">
+                                        <CustomFormField
+                                            fieldType={FormFieldType.SKELETON}
+                                            control={form.control}
+                                            name={`images[${index}]`}
+                                            className='mb-0'
+                                            renderSkeleton={(field) => (
+                                                <FormControl>
+                                                    <FileUploader
+                                                        files={img.file}
+                                                        onChange={(file) => handleImageChange(index, file)}
+                                                    />
+                                                </FormControl>
+                                            )}
+                                        />
+                                    </div>
+                                ))}
+                            </div>
                         </div>
-                        <div className="grid grid-cols-2 gap-4 my-4">
+                        <div className="flex flex-col">
                             <div className="flex flex-col gap-4">
                                 <CustomFormField
                                     fieldType={FormFieldType.INPUT}
@@ -199,29 +196,30 @@ const CreateProductPage = ({ params: { productId } }: SearchParamProps) => {
                                 />
 
                                 <CustomFormField
-                                    fieldType={FormFieldType.CHECKBOX}
-                                    control={form.control}
-                                    name="visible"
-                                    label="این محصول قابل نمایش باشد؟"
-                                />
-                            </div>
-                            <div>
-                                <CustomFormField
                                     fieldType={FormFieldType.SKELETON}
                                     control={form.control}
                                     name="description"
                                     label="توضیحات"
+                                    className='h-full'
                                     renderSkeleton={(field) => (
                                         <FormControl>
                                             <CustomEditor setData={field.onChange} data={field.value} />
                                         </FormControl>
                                     )}
                                 />
+
+                                <CustomFormField
+                                    fieldType={FormFieldType.CHECKBOX}
+                                    control={form.control}
+                                    name="visible"
+                                    label="این محصول قابل نمایش باشد؟"
+                                />
+
+                                <Button type='submit' variant="outline" className='w-full'>
+                                    {productId ? "ویرایش محصول" : "ایجاد محصول"}
+                                </Button>
                             </div>
                         </div>
-                        <Button type='submit' variant="outline" className='mt-4 w-full'>
-                            {productId ? "ویرایش محصول" : "ایجاد محصول"}
-                        </Button>
                     </form>
                 </Form>
             </div>

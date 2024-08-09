@@ -66,6 +66,23 @@ html {
   scroll-behavior: smooth
 }
 
+.ck.ck-content.ck-editor__editable.ck-rounded-corners.ck-editor__editable_inline {
+  background-color: #1A1D21;
+  border-radius: 0 0 8px 8px;
+  border-color: #363A3D;
+  height: 100%;
+}
+
+.ck.ck-toolbar.ck-toolbar_grouping {
+  background-color: #1A1D21;
+  border-radius: 8px 8px 0 0 !important;
+}
+
+.ck.ck-sticky-panel__content {
+  border-radius: 8px 8px 0 0 !important;
+  border-color: #363A3D !important;
+}
+
 /* ========================================== TAILWIND STYLES */
 @layer base {
 
@@ -171,7 +188,7 @@ html {
 
   /* ==== File Upload */
   .file-upload {
-    @apply text-12-regular flex cursor-pointer flex-col items-center justify-center gap-3 rounded-md border border-dashed border-dark-500 bg-dark-400 p-5;
+    @apply text-12-regular flex cursor-pointer flex-col items-center justify-center gap-3 rounded-md border border-dashed border-dark-500 bg-dark-400 p-2;
   }
 
   .file-upload_label {
@@ -300,7 +317,7 @@ html {
     @apply focus:ring-0 focus:ring-offset-0 focus-visible:border-none focus-visible:outline-none focus-visible:ring-transparent focus-visible:ring-offset-0 !important;
   }
 
-  [role=dialog] button.absolute{
+  [role=dialog] button.absolute {
     @apply hidden;
   }
 
