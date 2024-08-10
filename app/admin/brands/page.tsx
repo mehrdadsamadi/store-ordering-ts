@@ -79,7 +79,7 @@ const BrandsPage = () => {
                 error: ({ error }) => error,
             }
         )
-        .finally(() => fetchBrands())
+            .finally(() => fetchBrands())
     }
 
     const handleCloseDialog = () => {
@@ -121,7 +121,11 @@ const BrandsPage = () => {
                             label="تصویر برند"
                             renderSkeleton={(field) => (
                                 <FormControl>
-                                    <FileUploader files={field.value} onChange={field.onChange} />
+                                    <FileUploader
+                                        onDelete={() => form.setValue("image", [])}
+                                        files={field.value}
+                                        onChange={field.onChange}
+                                    />
                                 </FormControl>
                             )}
                         />
@@ -161,7 +165,7 @@ const BrandsPage = () => {
                                         <ConfirmButton
                                             title='حذف'
                                             description='برای حذف مطمعن هستید؟'
-                                            triggerBtnText={<Trash color='red' className="h-5 w-5" />}
+                                            triggerBtnText={<Trash className="h-5 w-5" />}
                                             onSubmit={() => handleRemoveBrand(brand._id)}
                                         />
                                     </div>

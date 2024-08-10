@@ -143,7 +143,11 @@ const CategoriesPage = () => {
               label="تصویر دسته بندی"
               renderSkeleton={(field) => (
                 <FormControl>
-                  <FileUploader files={field.value} onChange={field.onChange} />
+                  <FileUploader
+                    onDelete={() => form.setValue("image", [])}
+                    files={field.value}
+                    onChange={field.onChange}
+                  />
                 </FormControl>
               )}
             />

@@ -1,7 +1,7 @@
 "use client"
 import { getBrands } from '@/actions/brands.actions'
 import { getCategories } from '@/actions/categories.actions'
-import { addProduct, getProducts } from '@/actions/products.actions'
+import { addProduct, editProduct, getProductById } from '@/actions/products.actions'
 import CustomEditor from '@/components/customEditor'
 import CustomFormField, { FormFieldType } from '@/components/CustomFormField'
 import FileUploader from '@/components/FileUploader'
@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormLabel } from '@/components/ui/form'
 import { SelectItem } from '@/components/ui/select'
 import { ProductDefaultValues } from '@/constants'
+import { convertUrlToFile } from '@/lib/utils'
 import { ProductFormValidation } from '@/validations'
 import { zodResolver } from '@hookform/resolvers/zod'
 import React, { useEffect, useState } from 'react'
@@ -18,7 +19,7 @@ import toast from 'react-hot-toast'
 import { z } from 'zod'
 
 interface Image {
-    id: number
+    id?: number
     file?: File[]
 }
 
@@ -44,16 +45,35 @@ const CreateProductPage = ({ params: { productId } }: SearchParamProps) => {
 
     const fetchProduct = async () => {
         setLoading(true)
-        const productsData = await getProducts()
-        form.setValue("brand", productsData.brand._id)
-        form.setValue("category", productsData.category._id)
-        form.setValue("images", productsData.images)
-        form.setValue("name", productsData.name)
-        form.setValue("description", productsData.description)
-        form.setValue("slug", productsData.slug)
-        form.setValue("visible", productsData.visible)
+        const productData = await getProductById(productId)
+        await convertImagesToFile(productData.images)
+        form.setValue("brand", productData.brand._id)
+        form.setValue("category", productData.category._id)
+        form.setValue("images", productData.images)
+        form.setValue("name", productData.name)
+        form.setValue("description", productData.description)
+        form.setValue("slug", productData.slug)
+        form.setValue("visible", productData.visible)
         setLoading(false)
     }
+
+    const convertImagesToFile = async (imgs: string[]) => {
+        setImages([])
+        try {
+            const files: File[] = await Promise.all(imgs.map(convertUrlToFile));
+            const timestamp = new Date().getTime();
+            const newImages = files.map((file, index) => ({
+                id: timestamp + index,  // استفاده از timestamp به جای Date.now() در هر iteration
+                file: [file],
+            }));
+            setImages(prevImgs => [...prevImgs, ...newImages]);
+        } catch (error) {
+            console.error('Error converting URLs to files:', error);
+        }
+        if (images.length < 6) {
+            setImages(prevImages => [...prevImages, { id: Date.now() }])
+        }
+    };
 
     const fetchBrands = async () => {
         setLoading(true)
@@ -84,7 +104,7 @@ const CreateProductPage = ({ params: { productId } }: SearchParamProps) => {
         }
 
         await toast.promise(
-            addProduct({ ...values, images: formData }),
+            productId ? editProduct({ ...values, images: formData }, productId) : addProduct({ ...values, images: formData }),
             {
                 loading: 'در حال ایجاد محصول ...',
                 success: ({ message }) => message,
@@ -111,117 +131,126 @@ const CreateProductPage = ({ params: { productId } }: SearchParamProps) => {
         }
     }
 
+    const handleDeleteImage = (index: number) => {
+        setImages(prevImgs => prevImgs.filter((img, i) => i !== index))
+    }
+
     return (
         <section className='h-full'>
             <div className="w-full p-4 rounded-lg h-full relative">
                 <Loading loading={loading} />
-                <Form {...form}>
-                    <form className='grid grid-cols-2 gap-4' onSubmit={form.handleSubmit(handleCreateProduct)}>
-                        <div>
-                            <FormLabel>تصاویر محصول</FormLabel>
-                            <div className="grid grid-cols-3 gap-4 mt-2">
-                                {images.map((img, index) => (
-                                    <div key={img.id} className="">
+                {
+                    !loading && (
+                        <Form {...form}>
+                            <form className='grid grid-cols-2 gap-4' onSubmit={form.handleSubmit(handleCreateProduct)}>
+                                <div>
+                                    <FormLabel>تصاویر محصول</FormLabel>
+                                    <div className="grid grid-cols-3 gap-4 mt-2">
+                                        {images.map((img, index) => (
+                                            <div key={index} className="">
+                                                <CustomFormField
+                                                    fieldType={FormFieldType.SKELETON}
+                                                    control={form.control}
+                                                    name={`images[${index}]`}
+                                                    className='mb-0'
+                                                    renderSkeleton={(field) => (
+                                                        <FormControl>
+                                                            <FileUploader
+                                                                files={img.file}
+                                                                onChange={(file) => handleImageChange(index, file)}
+                                                                onDelete={file => handleDeleteImage(index)}
+                                                            />
+                                                        </FormControl>
+                                                    )}
+                                                />
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                                <div className="flex flex-col">
+                                    <div className="flex flex-col gap-4">
+                                        <CustomFormField
+                                            fieldType={FormFieldType.INPUT}
+                                            control={form.control}
+                                            name="name"
+                                            label="نام محصول"
+                                            placeholder="نام محصول"
+                                            iconSrc="/assets/icons/pen.svg"
+                                            iconAlt="product"
+                                        />
+
+                                        <div className="grid grid-cols-2 gap-2">
+                                            <CustomFormField
+                                                fieldType={FormFieldType.SELECT}
+                                                control={form.control}
+                                                name="brand"
+                                                label="برند محصول"
+                                                placeholder="یک برند را انتخاب کنید"
+                                            >
+                                                {brands.map((br: { _id: string, name: string }) => (
+                                                    <SelectItem key={br._id} value={br._id}>
+                                                        <div className="flex cursor-pointer items-center">
+                                                            <p>{br.name}</p>
+                                                        </div>
+                                                    </SelectItem>
+                                                ))}
+                                            </CustomFormField>
+                                            <CustomFormField
+                                                fieldType={FormFieldType.SELECT}
+                                                control={form.control}
+                                                name="category"
+                                                label="دسته بندی محصول"
+                                                placeholder="یک دسته بندی را انتخاب کنید"
+                                            >
+                                                {categories.map((cg: { _id: string, name: string }) => (
+                                                    <SelectItem key={cg._id} value={cg._id}>
+                                                        <div className="flex cursor-pointer items-center">
+                                                            <p>{cg.name}</p>
+                                                        </div>
+                                                    </SelectItem>
+                                                ))}
+                                            </CustomFormField>
+                                        </div>
+
+                                        <CustomFormField
+                                            fieldType={FormFieldType.INPUT}
+                                            control={form.control}
+                                            name="slug"
+                                            label="اسلاگ"
+                                            placeholder="اسلاگ"
+                                            iconSrc="/assets/icons/pen.svg"
+                                            iconAlt="slug"
+                                        />
+
                                         <CustomFormField
                                             fieldType={FormFieldType.SKELETON}
                                             control={form.control}
-                                            name={`images[${index}]`}
-                                            className='mb-0'
+                                            name="description"
+                                            label="توضیحات"
+                                            className='h-full'
                                             renderSkeleton={(field) => (
                                                 <FormControl>
-                                                    <FileUploader
-                                                        files={img.file}
-                                                        onChange={(file) => handleImageChange(index, file)}
-                                                    />
+                                                    <CustomEditor setData={field.onChange} data={field.value} />
                                                 </FormControl>
                                             )}
                                         />
+
+                                        <CustomFormField
+                                            fieldType={FormFieldType.CHECKBOX}
+                                            control={form.control}
+                                            name="visible"
+                                            label="این محصول قابل نمایش باشد؟"
+                                        />
+
+                                        <Button type='submit' variant="outline" className='w-full'>
+                                            {productId ? "ویرایش محصول" : "ایجاد محصول"}
+                                        </Button>
                                     </div>
-                                ))}
-                            </div>
-                        </div>
-                        <div className="flex flex-col">
-                            <div className="flex flex-col gap-4">
-                                <CustomFormField
-                                    fieldType={FormFieldType.INPUT}
-                                    control={form.control}
-                                    name="name"
-                                    label="نام محصول"
-                                    placeholder="نام محصول"
-                                    iconSrc="/assets/icons/pen.svg"
-                                    iconAlt="product"
-                                />
-
-                                <div className="grid grid-cols-2 gap-2">
-                                    <CustomFormField
-                                        fieldType={FormFieldType.SELECT}
-                                        control={form.control}
-                                        name="brand"
-                                        label="برند محصول"
-                                        placeholder="یک برند را انتخاب کنید"
-                                    >
-                                        {brands.map((br: { _id: string, name: string }) => (
-                                            <SelectItem key={br._id} value={br._id}>
-                                                <div className="flex cursor-pointer items-center">
-                                                    <p>{br.name}</p>
-                                                </div>
-                                            </SelectItem>
-                                        ))}
-                                    </CustomFormField>
-                                    <CustomFormField
-                                        fieldType={FormFieldType.SELECT}
-                                        control={form.control}
-                                        name="category"
-                                        label="دسته بندی محصول"
-                                        placeholder="یک دسته بندی را انتخاب کنید"
-                                    >
-                                        {categories.map((cg: { _id: string, name: string }) => (
-                                            <SelectItem key={cg._id} value={cg._id}>
-                                                <div className="flex cursor-pointer items-center">
-                                                    <p>{cg.name}</p>
-                                                </div>
-                                            </SelectItem>
-                                        ))}
-                                    </CustomFormField>
                                 </div>
-
-                                <CustomFormField
-                                    fieldType={FormFieldType.INPUT}
-                                    control={form.control}
-                                    name="slug"
-                                    label="اسلاگ"
-                                    placeholder="اسلاگ"
-                                    iconSrc="/assets/icons/pen.svg"
-                                    iconAlt="slug"
-                                />
-
-                                <CustomFormField
-                                    fieldType={FormFieldType.SKELETON}
-                                    control={form.control}
-                                    name="description"
-                                    label="توضیحات"
-                                    className='h-full'
-                                    renderSkeleton={(field) => (
-                                        <FormControl>
-                                            <CustomEditor setData={field.onChange} data={field.value} />
-                                        </FormControl>
-                                    )}
-                                />
-
-                                <CustomFormField
-                                    fieldType={FormFieldType.CHECKBOX}
-                                    control={form.control}
-                                    name="visible"
-                                    label="این محصول قابل نمایش باشد؟"
-                                />
-
-                                <Button type='submit' variant="outline" className='w-full'>
-                                    {productId ? "ویرایش محصول" : "ایجاد محصول"}
-                                </Button>
-                            </div>
-                        </div>
-                    </form>
-                </Form>
+                            </form>
+                        </Form>
+                    )
+                }
             </div>
         </section>
     )

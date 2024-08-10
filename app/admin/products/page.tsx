@@ -33,7 +33,11 @@ const ProductsPage = () => {
             </div>
             <div className="w-full p-4 rounded-lg h-full relative">
                 <Loading loading={loading} />
-                <DataTable columns={productsColumn} data={products} />
+                {
+                    !loading && (
+                        <DataTable columns={productsColumn} data={products} />
+                    )
+                }
             </div>
         </section>
     )
