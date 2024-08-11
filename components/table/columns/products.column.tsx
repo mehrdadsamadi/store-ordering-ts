@@ -64,11 +64,11 @@ export const productsColumn: ColumnDef<IProductModel>[] = [
         cell: ({ row: { original } }) => (
             <div className="flex gap-2">
                 <Link href={`/admin/products/create/${original._id}`} className="">
-                    <Button variant="outline" size="icon" className="rounded-full">
+                    <Button variant="ghost" size="icon" className="rounded-full">
                         <Edit className="text-dark-600" />
                     </Button>
                 </Link>
-                <Button variant="outline" size="icon" onClick={() => { console.log(original); }} className="rounded-full ">
+                <Button variant="ghost" size="icon" onClick={() => { console.log(original); }} className="rounded-full ">
                     <Eye className="text-dark-600" />
                 </Button>
 

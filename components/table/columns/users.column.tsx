@@ -46,10 +46,10 @@ export const usersColumn: ColumnDef<IUserModel>[] = [
         id: 'actions',
         cell: ({ row: { original } }) => (
             <div className="flex gap-2">
-                <Button variant="outline" size="icon" className="rounded-full">
+                <Button variant="ghost" size="icon" className="rounded-full">
                     <Edit className="text-dark-600"/>
                 </Button>
-                <Button variant="outline" size="icon" onClick={() => { console.log(original); }} className="rounded-full ">
+                <Button variant="ghost" size="icon" onClick={() => { console.log(original); }} className="rounded-full ">
                     <Trash className="text-dark-600"/>
                 </Button>
             </div>

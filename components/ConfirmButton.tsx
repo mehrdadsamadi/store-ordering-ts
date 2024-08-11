@@ -16,17 +16,18 @@ interface ConfirmButtonProps {
     description?: string,
     submitBtnText?: string;
     rejectBtnText?: string;
+    className?: string;
     onSubmit: () => void;
 }
 
 const ConfirmButton = (props: ConfirmButtonProps) => {
-    const { title, triggerBtnText, submitBtnText, description, rejectBtnText, onSubmit } = props
+    const { title, triggerBtnText, submitBtnText, description, rejectBtnText, className, onSubmit } = props
     const [open, setOpen] = useState(false)
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button variant="ghost">
+                <Button variant="ghost" className={className}>
                     {triggerBtnText ? triggerBtnText : title}
                 </Button>
             </DialogTrigger>
