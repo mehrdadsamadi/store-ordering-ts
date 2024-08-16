@@ -1,4 +1,7 @@
 import { Schema, Document } from 'mongoose';
+import { IBrandType } from '../brand/brand.types';
+import { ICategoryType } from '../category/category.types';
+import { IProductType } from '../product/product.types';
 
 export interface ISpecSubtitles {
     subtitle: string;
@@ -17,8 +20,12 @@ export interface ISpecModel extends Document {
     specifications: ISpecArray[]
 }
 
-export interface ISpecType extends ISpecModel {
-    _id: string
+export interface IAddSpecParams {
+    _id: string,
+    brand?: IBrandType,
+    category?: ICategoryType;
+    product?: IProductType;
+    specifications: ISpecArray[]
 }
 
 // export interface IAddSpecParams {

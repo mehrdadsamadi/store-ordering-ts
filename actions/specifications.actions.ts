@@ -6,6 +6,13 @@ import { uploadFile } from "./upload.actions";
 import { getCookie } from "./cookies.actions";
 import { ROLES } from "@/constants";
 import Specification from "@/models/specification.model";
+import { IAddSpecParams } from "@/types/specificaion/specification.types";
+import Product from "@/models/product.model";
+import Category from "@/models/category.model";
+import Brand from "@/models/brand.model";
+import { IProductType } from "@/types/product/product.types";
+import { ICategoryType } from "@/types/category/category.types";
+import { IBrandType } from "@/types/brand/brand.types";
 
 export const getSpecs = async () => {
     try {
@@ -49,94 +56,92 @@ export const deleteSpecById = async (specId: string) => {
     }
 }
 
-// export const getProductById = async (productId: string) => {
-//     try {
-//         const user = await getCookie("user")
-//         if (user?.role !== ROLES.ADMIN.name)
-//             return parseStringify({ error: "شما دسترسی به این بخش را ندارید" });
+export const getSpecById = async (specId: string) => {
+    try {
+        const user = await getCookie("user")
+        if (user?.role !== ROLES.ADMIN.name)
+            return parseStringify({ error: "شما دسترسی به این بخش را ندارید" });
 
-//         await connectMongo()
+        await connectMongo()
 
-//         return parseStringify(await Product.findById(productId).populate(["category", "brand", "specs", "features"]))
-//     } catch (error: unknown) {
-//         console.log(error);
+        return parseStringify(await Specification.findById(specId).populate(["category", "brand", "product"]))
+    } catch (error: unknown) {
+        console.log(error);
 
-//         if (error instanceof Error) {
-//             return parseStringify({ error: error.message });
-//         } else {
-//             return parseStringify({ error: 'خطایی رخ داده است، بار دیگر امتحان کنید.' });
-//         }
-//     }
-// }
+        if (error instanceof Error) {
+            return parseStringify({ error: error.message });
+        } else {
+            return parseStringify({ error: 'خطایی رخ داده است، بار دیگر امتحان کنید.' });
+        }
+    }
+}
 
-// export const addProduct = async (values: IAddProductParams) => {
-//     try {
-//         const user = await getCookie("user")
-//         if (user?.role !== ROLES.ADMIN.name)
-//             return parseStringify({ error: "شما دسترسی به این بخش را ندارید" });
+export const addSpec = async (values: IAddSpecParams) => {
+    try {
+        const user = await getCookie("user")
+        if (user?.role !== ROLES.ADMIN.name)
+            return parseStringify({ error: "شما دسترسی به این بخش را ندارید" });
 
-//         await connectMongo()
+        await connectMongo()
 
-//         let images: string[] = []
+        let query: {
+            product?: IProductType,
+            category?: ICategoryType,
+            brand?: IBrandType,
+        } = {}
 
-//         if (values.images) {
-//             const imgs = [...values.images]
+        if (values?.product) {
+            query.product = values.product
+        } else if (values?.category) {
+            query.category = values.category
+        } else {
+            query.brand = values.brand
+        }
 
-//             for(const img of imgs) {
-//                 let fd = new FormData();
-//                 fd.append("file", img[1])
-//                 images.push(await uploadFile(fd, "products"))
-//             }
+        const existSpec = await Specification.findOne(query)
+        if (existSpec) {
+            await Specification.updateOne({_id: existSpec._id}, {$push: {specifications: values.specifications}})
+        } else {
+            const specDoc = await Specification.create(values)
+    
+            if (values?.product) {
+                await Product.findByIdAndUpdate(values.product, { specs: specDoc._id })
+            } else if (values?.category) {
+                await Category.findByIdAndUpdate(values.category, { specs: specDoc._id })
+            } else {
+                await Brand.findByIdAndUpdate(values.brand, { specs: specDoc._id })
+            }
+        }
 
-//             values.images = images
-//         }
+        return parseStringify({ message: "مشخصات با موفقیت ایجاد شد" })
+    } catch (error: unknown) {
+        console.log(error);
 
-//         await Product.create(values)
+        if (error instanceof Error) {
+            return parseStringify({ error: error.message });
+        } else {
+            return parseStringify({ error: 'خطایی رخ داده است، بار دیگر امتحان کنید.' });
+        }
+    }
+}
 
-//         return parseStringify({ message: "محصول با موفقیت ایجاد شد" })
-//     } catch (error: unknown) {
-//         console.log(error);
+export const editSpecById = async (values: IAddSpecParams, specId: string) => {
+    try {
+        const user = await getCookie("user")
+        if (user?.role !== ROLES.ADMIN.name)
+            return parseStringify({ error: "شما دسترسی به این بخش را ندارید" });
 
-//         if (error instanceof Error) {
-//             return parseStringify({ error: error.message });
-//         } else {
-//             return parseStringify({ error: 'خطایی رخ داده است، بار دیگر امتحان کنید.' });
-//         }
-//     }
-// }
+        await connectMongo()
 
-// export const editProduct = async (values: IAddProductParams, productId: string) => {
-//     try {
-//         const user = await getCookie("user")
-//         if (user?.role !== ROLES.ADMIN.name)
-//             return parseStringify({ error: "شما دسترسی به این بخش را ندارید" });
+        await Specification.findByIdAndUpdate(specId, values)
+        return parseStringify({ message: "مشخصات با موفقیت ویرایش شد" })
+    } catch (error: unknown) {
+        console.log(error);
 
-//         await connectMongo()
-
-//         let images: string[] = []
-
-//         if (values.images) {
-//             const imgs = [...values.images]
-
-//             for(const img of imgs) {
-//                 let fd = new FormData();
-//                 fd.append("file", img[1])
-//                 images.push(await uploadFile(fd, "products"))
-//             }
-
-//             values.images = images
-//         }
-
-//         await Product.findByIdAndUpdate(productId, values)
-
-//         return parseStringify({ message: "محصول با موفقیت ویرایش شد" })
-//     } catch (error: unknown) {
-//         console.log(error);
-
-//         if (error instanceof Error) {
-//             return parseStringify({ error: error.message });
-//         } else {
-//             return parseStringify({ error: 'خطایی رخ داده است، بار دیگر امتحان کنید.' });
-//         }
-//     }
-// }
+        if (error instanceof Error) {
+            return parseStringify({ error: error.message });
+        } else {
+            return parseStringify({ error: 'خطایی رخ داده است، بار دیگر امتحان کنید.' });
+        }
+    }
+}

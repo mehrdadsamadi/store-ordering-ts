@@ -106,7 +106,7 @@ const CreateProductPage = ({ params: { productId } }: SearchParamProps) => {
         await toast.promise(
             productId ? editProduct({ ...values, images: formData }, productId) : addProduct({ ...values, images: formData }),
             {
-                loading: 'در حال ایجاد محصول ...',
+                loading: productId ? "در حال ویرایش محصول..." : 'در حال ایجاد محصول ...',
                 success: ({ message }) => message,
                 error: ({ error }) => error,
             }

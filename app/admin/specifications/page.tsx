@@ -38,7 +38,7 @@ const SpecificaitonsPage = () => {
     return (
         <section className="gap-4 flex flex-col h-full">
             <div className="rounded-lg border bg-card text-card-foreground shadow-sm p-4 flex justify-between">
-                <Link href={`/admin/products/create`} className="">
+                <Link href={`/admin/specifications/create`} className="">
                     <Button variant="outline" className="">
                         ایجاد مشخصات
                     </Button>
